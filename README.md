@@ -2,6 +2,7 @@
 ## Aday Cuesta Correa y Manuel José Sebastián Noda
 
 **1. Realice la restauración de la base de datos alquilerdvd.tar. Observe que la base de datos no tiene un formato SQL como el empleado en actividades anteriores.**
+
 Para realizar la restauración de la base de datos he creado una base de datos y le he asignado el contenido del fichero .tar
 ```bash
 $ createdb alquiler
@@ -9,6 +10,7 @@ $ pg_restore -d alquiler < AlquilerPractica.tar
 ```
 
 **2. Identifique las tablas, vistas y secuencias.**
+
 Para identificar las tablas, vistas y secuencias he utilizado comandos de psql:
 
 ```postgresql
@@ -58,6 +60,7 @@ alquiler=# \ds
 ```
 
 **3. Identifique las tablas principales y sus principales elementos.**
+
 Las tablas principales son las siguientes:
  - **Film** con sus atributos principales que son *film_id*, *title*, *rental_rate*, *rental_duration*, *replacement_cost*. Como empresa me interesa sobre todo como de bien se venden mis películas y por cuanto tiempo se alquilan, así como el coste de reemplazarlas si se pierden.
  - **Inventory** con sus atributos principales que son *inventory_id*, *store_id* y *film_id*. Es importante saber que peliculas tenemos disponibles para poder vender, pues puede ser que hayan películas que no poseamos y sean tendencia.
