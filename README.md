@@ -67,11 +67,12 @@ Las tablas principales son las siguientes:
  - **store** con sus atributos principales *store_id*, *manager_staff_id* y *address_id*. Hay que saber cuantas tiendas poseemos, dónde se encuentran y quién es el manager encargado de dicha tienda.
 
 **4. Realice las siguientes consultas.**
-  **- Obtenga las ventas totales por categoría de películas ordenadas descendentemente.**
 
-  **- Obtenga las ventas totales por tienda, donde se refleje la ciudad, el país (concatenar la ciudad y el país empleando como separador la “,”), y el encargado. Pudiera emplear GROUP BY, ORDER BY**
+- **Obtenga las ventas totales por categoría de películas ordenadas descendentemente.**
 
-  **- Obtenga una lista de películas, donde se reflejen el identificador, el título, descripción, categoría, el precio, la duración de la película, clasificación, nombre y apellidos de los actores (puede realizar una concatenación de ambos). Pudiera emplear GROUP BY**
+- **Obtenga las ventas totales por tienda, donde se refleje la ciudad, el país (concatenar la ciudad y el país empleando como separador la “,”), y el encargado. Pudiera emplear GROUP BY, ORDER BY**
 
-  **- Obtenga la información de los actores, donde se incluya sus nombres y apellidos, las categorías y sus películas. Los actores deben de estar agrupados y, las categorías y las películas deben estar concatenados por “:”**
+- **Obtenga una lista de películas, donde se reflejen el identificador, el título, descripción, categoría, el precio, la duración de la película, clasificación, nombre y apellidos de los actores (puede realizar una concatenación de ambos). Pudiera emplear GROUP BY**
+
+- **Obtenga la información de los actores, donde se incluya sus nombres y apellidos, las categorías y sus películas. Los actores deben de estar agrupados y, las categorías y las películas deben estar concatenados por “:”**
   
