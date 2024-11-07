@@ -72,6 +72,37 @@ Las tablas principales son las siguientes:
 **4. Realice las siguientes consultas.**
 
 - **Obtenga las ventas totales por categoría de películas ordenadas descendentemente.**
+```postgresql
+SELECT C.NAME AS CATEGORY, SUM(P.AMOUNT) AS SALES
+FROM CATEGORY C 
+JOIN FILM_CATEGORY FC ON C.CATEGORY_ID = FC.CATEGORY_ID
+JOIN FILM F ON FC.FILM_ID = F.FILM_ID
+JOIN INVENTORY I ON F.FILM_ID = I.FILM_ID
+JOIN RENTAL R ON I.INVENTORY_ID = R.INVENTORY_ID
+JOIN PAYMENT P ON R.RENTAL_ID = P.RENTAL_ID
+GROUP BY C.NAME
+ORDER BY SALES DESC;
+
+  category   |  sales  
+-------------+---------
+ Sports      | 4892.19
+ Sci-Fi      | 4336.01
+ Animation   | 4245.31
+ Drama       | 4118.46
+ Comedy      | 4002.48
+ New         | 3966.38
+ Action      | 3951.84
+ Foreign     | 3934.47
+ Games       | 3922.18
+ Family      | 3830.15
+ Documentary | 3749.65
+ Horror      | 3401.27
+ Classics    | 3353.38
+ Children    | 3309.39
+ Travel      | 3227.36
+ Music       | 3071.52
+(16 rows)
+```
 
 - **Obtenga las ventas totales por tienda, donde se refleje la ciudad, el país (concatenar la ciudad y el país empleando como separador la “,”), y el encargado. Pudiera emplear GROUP BY, ORDER BY**
 
