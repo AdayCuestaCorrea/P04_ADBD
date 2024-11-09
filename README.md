@@ -59,6 +59,69 @@ alquiler=# \ds
 
 ```
 
+**Revisando las tablas, observé como la tabla inventory no posee los store_id como clave foránea de store, esto está mal teniendo en cuenta como está hecho el esquema de la base de datos así que decidí arreglarlo**
+
+```postgresql
+\d inventory
+
+                                              Table "public.inventory"
+    Column    |            Type             | Collation | Nullable |                     Default                     
+--------------+-----------------------------+-----------+----------+-------------------------------------------------
+ inventory_id | integer                     |           | not null | nextval('inventory_inventory_id_seq'::regclass)
+ film_id      | smallint                    |           | not null | 
+ store_id     | smallint                    |           | not null | 
+ last_update  | timestamp without time zone |           | not null | now()
+Indexes:
+    "inventory_pkey" PRIMARY KEY, btree (inventory_id)
+    "idx_store_id_film_id" btree (store_id, film_id)
+Foreign-key constraints:
+    "inventory_film_id_fkey" FOREIGN KEY (film_id) REFERENCES film(film_id) ON UPDATE CASCADE ON DELETE RESTRICT
+Referenced by:
+    TABLE "rental" CONSTRAINT "rental_inventory_id_fkey" FOREIGN KEY (inventory_id) REFERENCES inventory(inventory_id) ON UPDATE CASCADE ON DELETE RESTRICT
+Triggers:
+    last_updated BEFORE UPDATE ON inventory FOR EACH ROW EXECUTE FUNCTION last_updated()
+```
+
+**Como observamos, store_id no es foreign key**
+
+```postgresql
+ALTER TABLE inventory
+ADD CONSTRAINT fk_store_id FOREIGN KEY (store_id) REFERENCES store(store_id) ON UPDATE CASCADE ON DELETE RESTRICT;
+```
+
+**Ocurre lo mismo con la tabla customer, que store_id no es foreign key así que hacemos lo mismo**
+
+```postgresql
+                                             Table "public.customer"
+   Column    |            Type             | Collation | Nullable |                    Default                    
+-------------+-----------------------------+-----------+----------+-----------------------------------------------
+ customer_id | integer                     |           | not null | nextval('customer_customer_id_seq'::regclass)
+ store_id    | smallint                    |           | not null | 
+ first_name  | character varying(45)       |           | not null | 
+ last_name   | character varying(45)       |           | not null | 
+ email       | character varying(50)       |           |          | 
+ address_id  | smallint                    |           | not null | 
+ activebool  | boolean                     |           | not null | true
+ create_date | date                        |           | not null | 'now'::text::date
+ last_update | timestamp without time zone |           |          | now()
+ active      | integer                     |           |          | 
+Indexes:
+    "customer_pkey" PRIMARY KEY, btree (customer_id)
+    "idx_fk_address_id" btree (address_id)
+    "idx_fk_store_id" btree (store_id)
+    "idx_last_name" btree (last_name)
+Foreign-key constraints:
+    "customer_address_id_fkey" FOREIGN KEY (address_id) REFERENCES address(address_id) ON UPDATE CASCADE ON DELETE RESTRICT
+Referenced by:
+    TABLE "payment" CONSTRAINT "payment_customer_id_fkey" FOREIGN KEY (customer_id) REFERENCES customer(customer_id) ON UPDATE CASCADE ON DELETE RESTRICT
+    TABLE "rental" CONSTRAINT "rental_customer_id_fkey" FOREIGN KEY (customer_id) REFERENCES customer(customer_id) ON UPDATE CASCADE ON DELETE RESTRICT
+Triggers:
+    last_updated BEFORE UPDATE ON customer FOR EACH ROW EXECUTE FUNCTION last_updated()
+
+ALTER TABLE customer
+ADD CONSTRAINT fk_store_id FOREIGN KEY (store_id) REFERENCES store(store_id) ON UPDATE CASCADE ON DELETE RESTRICT;
+```
+
 **3. Identifique las tablas principales y sus principales elementos.**
 
 Las tablas principales son las siguientes:
@@ -220,3 +283,145 @@ JOIN category ON film_category.category_id = category.category_id
 GROUP BY actor.actor_id, actor.first_name, actor.last_name
 ORDER BY actor_name;
 ```
+
+**6. Haga un análisis del modelo e incluya las restricciones CHECK que considere necesarias.**
+Vamos a realizar varios checks para las siguientes tablas:
+
+- **category**: category_id debe ser mayor que 0.
+```postgresql
+ALTER TABLE category
+ADD CONSTRAINT category_id_check CHECK (category_id > 0);
+```
+
+
+- **language**: language_id debe ser mayor que 0.
+```postgresql
+ALTER TABLE language
+ADD CONSTRAINT language_id_check CHECK (language_id > 0);
+```
+
+- **actor**: actor_id debe ser mayor que 0
+```postgresql
+ALTER TABLE actor
+ADD CONSTRAINT actor_id_check CHECK (actor_id > 0);
+```
+
+- **film**:
+  - film_id debe ser mayor que 0.
+    ```postgresql
+    ALTER TABLE film
+    ADD CONSTRAINT film_id_check CHECK (film_id > 0);
+    ```
+  - release_year debe ser mayor o igual que 1895 (año en el que se estrenó la primera pelicula) y el año actual.
+    ```postgresql
+    ALTER TABLE film
+    ADD CONSTRAINT release_year_check CHECK (release_year >= 1895 AND release_year <= DATE_PART('year', CURRENT_DATE));
+    ```
+  - rental_duration debe ser mayor que 0 y menor que 8.
+    ```postgresql
+    ALTER TABLE film
+    ADD CONSTRAINT rental_duration_check CHECK (rental_duration >= 1 AND rental_duration <= 7);
+    ```
+  - Tanto rental_rate como replacement_cost deben ser mayor o igual a 0.
+    ```postgresql
+    ALTER TABLE film
+    ADD CONSTRAINT rental_rate_check CHECK (rental_rate > 0),
+    ADD CONSTRAINT replacement_cost_check CHECK (replacement_cost > 0);
+    ```
+  - length debe ser mayor que 0.
+    ```postgresql
+    ALTER TABLE film
+    ADD CONSTRAINT length_check CHECK (length > 0);
+    ```
+    
+- **inventory**: inventory_id debe ser mayor o igual a 0.
+  ```postgresql
+  ALTER TABLE inventory
+  ADD CONSTRAINT inventory_id_check CHECK (inventory_id > 0);
+  ```
+  
+- **rental**:
+  - rental_id debe ser mayor que 0.
+  ```postgresql
+  ALTER TABLE rental
+  ADD CONSTRAINT rental_id_check CHECK (rental_id > 0);
+  ```
+  
+  - rental_date no puede ser mayor que el día actual.
+  ```postgresql
+  ALTER TABLE rental
+  ADD CONSTRAINT rental_date_check CHECK (rental_date <= CURRENT_TIMESTAMP);
+  ```
+  
+  - return_date tiene que ser mayor o igual que rental_date.
+  ```postgresql
+  ALTER TABLE rental
+  ADD CONSTRAINT return_date_check CHECK (return_date >= rental_date);
+  ```
+
+- **staff**: staff_id debe ser mayor que 0.
+  ```postgresql
+  ALTER TABLE staff
+  ADD CONSTRAINT staff_id_check CHECK (staff_id > 0);
+  ```
+- **payment**:
+  - payment_id debe ser mayor que 0.
+  ```postgresql
+  ALTER TABLE payment
+  ADD CONSTRAINT payment_id_check CHECK (payment_id > 0);
+  ```
+
+  - amount debe ser mayor o igual que 0.
+  ```postgresql
+  ALTER TABLE payment
+  ADD CONSTRAINT amount_check CHECK (amount >= 0);
+  ```
+  
+  - payment_date no puede ser mayor que el timestamp actual.
+  ```postgresql
+  ALTER TABLE payment
+  ADD CONSTRAINT payment_date_check CHECK (payment_date <= CURRENT_TIMESTAMP);
+  ```
+  
+- **customer**:
+  - customer_id debe ser mayor que 0.
+  ```postgresql
+  ALTER TABLE customer
+  ADD CONSTRAINT customer_id_check CHECK (customer_id > 0);
+  ```
+
+  - create_date debe ser menor o igual al timestamp actual.
+  ```postgresql
+  ALTER TABLE customer
+  ADD CONSTRAINT create_date_check CHECK (create_date <= CURRENT_DATE);
+  ```
+
+  - active debería de ser tipo booleano pues solo tiene valores de 0 y 1.
+  ```postgresql
+  ALTER TABLE customer
+  ALTER COLUMN active TYPE boolean USING active::boolean;
+  ```
+
+- **store**: store_id debe ser mayor que 0.
+  ```postgresql
+  ALTER TABLE store
+  ADD CONSTRAINT store_id_check CHECK (store_id > 0);
+  ```
+
+- **address**: address_id debe ser mayor que 0.
+  ```postgresql
+  ALTER TABLE address
+  ADD CONSTRAINT address_id_check CHECK (address_id > 0);
+  ```
+
+- **country**: country_id debe ser mayor que 0.
+  ```postgresql
+  ALTER TABLE country
+  ADD CONSTRAINT country_id_check CHECK (country_id > 0);
+  ```
+
+- **city**: city_id debe ser mayor que 0.
+  ```postgresql
+  ALTER TABLE city
+  ADD CONSTRAINT city_id_check CHECK (city_id > 0);
+  ```
