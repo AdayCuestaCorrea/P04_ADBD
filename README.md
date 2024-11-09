@@ -106,7 +106,117 @@ ORDER BY SALES DESC;
 
 - **Obtenga las ventas totales por tienda, donde se refleje la ciudad, el país (concatenar la ciudad y el país empleando como separador la “,”), y el encargado. Pudiera emplear GROUP BY, ORDER BY**
 
+```postgresql
+SELECT CONCAT(city.city, ', ', country.country) AS location,
+CONCAT(staff.first_name, ' ', staff.last_name) AS manager,
+store.store_id, SUM(payment.amount) AS total_sales
+FROM payment JOIN rental ON payment.rental_id = rental.rental_id
+JOIN inventory ON rental.inventory_id = inventory.inventory_id
+JOIN store ON inventory.store_id = store.store_id
+JOIN address ON store.address_id = address.address_id
+JOIN city ON address.city_id = city.city_id
+JOIN country ON city.country_id = country.country_id
+JOIN staff ON store.manager_staff_id = staff.staff_id
+GROUP BY store.store_id, location, manager;
+
+       location       |   manager    | store_id | total_sales 
+----------------------+--------------+----------+-------------
+ Lethbridge, Canada   | Mike Hillyer |        1 |    30628.91
+ Woodridge, Australia | Jon Stephens |        2 |    30683.13
+```
+
 - **Obtenga una lista de películas, donde se reflejen el identificador, el título, descripción, categoría, el precio, la duración de la película, clasificación, nombre y apellidos de los actores (puede realizar una concatenación de ambos). Pudiera emplear GROUP BY**
 
+```postgresql
+SELECT film.film_id, film.title, film.description,
+category.name AS category, film.rental_rate AS price,
+film.length AS duration, film.rating,
+STRING_AGG(CONCAT(actor.first_name, ' ', actor.last_name), ', ') AS actors
+FROM film JOIN film_category ON film.film_id = film_category.film_id
+JOIN category ON film_category.category_id = category.category_id
+JOIN film_actor ON film.film_id = film_actor.film_id
+JOIN actor ON film_actor.actor_id = actor.actor_id
+GROUP BY film.film_id, film.title, film.description, category.name, film.rental_rate, film.length, film.rating
+ORDER BY film.title;
+```
+
+El resultado de la consulta es difícil de leer, por tanto he obviado colocar el resultado en este informe.
+
 - **Obtenga la información de los actores, donde se incluya sus nombres y apellidos, las categorías y sus películas. Los actores deben de estar agrupados y, las categorías y las películas deben estar concatenados por “:”**
-  
+
+```postgresql
+SELECT CONCAT(actor.first_name, ' ', actor.last_name) AS actor_name,
+STRING_AGG(CONCAT(category.name, ': ', film.title), ', ') AS categories_and_movies
+FROM actor JOIN film_actor ON actor.actor_id = film_actor.actor_id
+JOIN film ON film_actor.film_id = film.film_id
+JOIN film_category ON film.film_id = film_category.film_id
+JOIN category ON film_category.category_id = category.category_id
+GROUP BY actor.actor_id, actor.first_name, actor.last_name
+ORDER BY actor_name;
+```
+
+El resultado de la consulta es difícil de leer, por tanto he obviado colocar el resultado en este informe.
+
+**5. Realice todas las vistas de las consultas anteriores. Colóqueles el prefijo view_ a su denominación.**
+
+- **Vista sobre las ventas totales por categoría de películas ordenadas descendentemente**
+
+```postgresql
+CREATE VIEW view_sales_by_category AS
+SELECT C.NAME AS CATEGORY, SUM(P.AMOUNT) AS SALES
+FROM CATEGORY C 
+JOIN FILM_CATEGORY FC ON C.CATEGORY_ID = FC.CATEGORY_ID
+JOIN FILM F ON FC.FILM_ID = F.FILM_ID
+JOIN INVENTORY I ON F.FILM_ID = I.FILM_ID
+JOIN RENTAL R ON I.INVENTORY_ID = R.INVENTORY_ID
+JOIN PAYMENT P ON R.RENTAL_ID = P.RENTAL_ID
+GROUP BY C.NAME
+ORDER BY SALES DESC;
+```
+
+- **Vista sobre las ventas totales por tienda, donde se refleja la ciudad, el país, y el encargado**
+
+```postgresql
+CREATE VIEW view_sales_by_store AS
+SELECT CONCAT(city.city, ', ', country.country) AS location,
+CONCAT(staff.first_name, ' ', staff.last_name) AS manager,
+store.store_id, SUM(payment.amount) AS total_sales
+FROM payment JOIN rental ON payment.rental_id = rental.rental_id
+JOIN inventory ON rental.inventory_id = inventory.inventory_id
+JOIN store ON inventory.store_id = store.store_id
+JOIN address ON store.address_id = address.address_id
+JOIN city ON address.city_id = city.city_id
+JOIN country ON city.country_id = country.country_id
+JOIN staff ON store.manager_staff_id = staff.staff_id
+GROUP BY store.store_id, location, manager;
+```
+
+- **Vista sobre la lista de películas, donde se refleja el identificador, el título, descripción, categoría, el precio, la duración de la película, clasificación, nombre y apellidos de los actores.**
+
+```postgresql
+CREATE VIEW view_movie_list AS
+SELECT film.film_id, film.title, film.description,
+category.name AS category, film.rental_rate AS price,
+film.length AS duration, film.rating,
+STRING_AGG(CONCAT(actor.first_name, ' ', actor.last_name), ', ') AS actors
+FROM film JOIN film_category ON film.film_id = film_category.film_id
+JOIN category ON film_category.category_id = category.category_id
+JOIN film_actor ON film.film_id = film_actor.film_id
+JOIN actor ON film_actor.actor_id = actor.actor_id
+GROUP BY film.film_id, film.title, film.description, category.name, film.rental_rate, film.length, film.rating
+ORDER BY film.title;
+```
+
+- **Vista sobre la información de los actores, donde se incluyen sus nombres y apellidos, las categorías y sus películas.**
+
+```postgresql
+CREATE VIEW view_actor_info AS
+SELECT CONCAT(actor.first_name, ' ', actor.last_name) AS actor_name,
+STRING_AGG(CONCAT(category.name, ': ', film.title), ', ') AS categories_and_movies
+FROM actor JOIN film_actor ON actor.actor_id = film_actor.actor_id
+JOIN film ON film_actor.film_id = film.film_id
+JOIN film_category ON film.film_id = film_category.film_id
+JOIN category ON film_category.category_id = category.category_id
+GROUP BY actor.actor_id, actor.first_name, actor.last_name
+ORDER BY actor_name;
+```
