@@ -425,3 +425,141 @@ ADD CONSTRAINT actor_id_check CHECK (actor_id > 0);
   ALTER TABLE city
   ADD CONSTRAINT city_id_check CHECK (city_id > 0);
   ```
+
+**7. Explique la sentencia que aparece en la tabla customer**
+```postgresql
+Triggers:
+    last_updated BEFORE UPDATE ON customer FOR EACH ROW EXECUTE FUNCTION last_updated()
+```
+
+**Identifique alguna tabla donde se utilice una solución similar.**
+
+El trigger en cuestión es el siguiente:
+```postgresql
+SELECT prosrc
+FROM pg_proc
+WHERE proname = 'last_updated';
+                  prosrc                  
+------------------------------------------
+                                         +
+ BEGIN                                   +
+     NEW.last_update = CURRENT_TIMESTAMP;+
+     RETURN NEW;                         +
+ END 
+(1 row)
+```
+
+Esa sentencia nos indica que la tabla customer posee un trigger llamado last_updated que se ejecuta antes de actualizar la tabla en cuestión y se activa para cada fila llamando a la función last_updated que es la encargada de que campo last_update de la tabla customer se actualice automáticamente con el timestamp actual (que será el timestamp del momento de la actualización del registro)
+
+**Tablas que utilizan soluciones similares:** 
+- La tabla **film** posee 2 triggers, siendo uno de ellos el trigger last_updated
+  ```postgresql
+  Triggers:
+    film_fulltext_trigger BEFORE INSERT OR UPDATE ON film FOR EACH ROW EXECUTE FUNCTION tsvector_update_trigger('fulltext', 'pg_catalog.english', 'title', 'description')
+    last_updated BEFORE UPDATE ON film FOR EACH ROW EXECUTE FUNCTION last_updated()
+  ```
+En cuanto al otro trigger (*film_fulltext_trigger*), cuando se inserta o actualiza una fila en la tabla film, se ejecuta la función *tsvector_update_trigger* y actualiza la columna fulltext con un valor de tipo tsvector generado a partir de los valores de las columnas title y description, utilizando las reglas de tokenización del idioma especificado.
+- La tabla **actor**, **address**, **category**, **city**, **country**, **film_actor**, **film_category**, **inventory**, **language**, **rental**, **staff** y **store** también poseen el trigger last_updated
+
+**8. Construya un disparador que guarde en una nueva tabla creada por usted la fecha de cuando se insertó un nuevo registro en la tabla film**
+
+Lo primero que tenemos que hacer es crear la tabla en la que almacenaremos los registros de inserción:
+
+```postgresql
+CREATE TABLE film_insertion_log (
+    log_id SERIAL PRIMARY KEY,
+    film_id INT NOT NULL,
+    insertion_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+- **log_id:** Identificador único para cada registro en esta tabla.
+- **film_id:**  ID de la película que se insertó en la tabla film.
+- **insertion_date:** Fecha y hora de inserción, que se establece de forma predeterminada en la fecha y hora actuales.
+
+Ahora tenemos que crear la función para el trigger, tal que así:
+
+```postgresql
+CREATE OR REPLACE FUNCTION log_film_insertion()
+RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO film_insertion_log (film_id, insertion_date)
+    VALUES (NEW.film_id, CURRENT_TIMESTAMP);
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+```
+- **NEW.film_id:** NEW es una referencia a la nueva fila que se está insertando en film. NEW.film_id hace referencia al ID de esa nueva película.
+- **CURRENT_TIMESTAMP:** Almacena la fecha y hora actuales en la columna insertion_date.
+
+Por último tenemos que crear el trigger:
+
+```postgresql
+CREATE TRIGGER log_film_insertion_trigger
+AFTER INSERT ON film FOR EACH ROW EXECUTE FUNCTION log_film_insertion();
+```
+
+**Veamos como funciona:**
+
+```postgresql
+INSERT INTO film (film_id, language_id, title, description, release_year, rental_duration, rental_rate, length, replacement_cost, rating, special_features)
+VALUES (10000, 1, 'Dummy Movie', 'This movie is really good, underrated even.', 2024, 5, 0.99, 120, 20.99, 'PG', '{"It has dinosaurs in it"}');
+INSERT 0 1
+
+SELECT * FROM film_insertion_log;
+ log_id | film_id |       insertion_date       
+--------+---------+----------------------------
+      1 |   10000 | 2024-11-10 21:35:56.325695
+(1 row)
+```
+
+**9. Construya un disparador que guarde en una nueva tabla creada por usted la fecha de cuando se eliminó un registro en la tabla film y el identificador del film.**
+
+Empecemos entonces otra vez creando la nueva tabla que contrendrá los registros:
+
+```postgresql
+CREATE TABLE film_deletion_log (
+    log_id SERIAL PRIMARY KEY,
+    film_id INT NOT NULL,
+    deletion_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+- **log_id:** Identificador único para cada registro en esta tabla.
+- **film_id:** ID de la película eliminada de la tabla film.
+- **deletion_date:** Fecha y hora en que se eliminó el registro, con un valor predeterminado de la fecha y hora actuales.
+
+Creemos la función del trigger:
+```postgresql
+CREATE OR REPLACE FUNCTION log_film_deletion()
+RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO film_deletion_log (film_id, deletion_date)
+    VALUES (OLD.film_id, CURRENT_TIMESTAMP);
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+```
+- **OLD.film_id:** OLD hace referencia a la fila que está a punto de eliminarse. OLD.film_id captura el ID de la película antes de que se elimine.
+- **CURRENT_TIMESTAMP:** Almacena la fecha y hora actuales en la columna deletion_date.
+
+Creemos el trigger:
+
+```postgresql
+CREATE TRIGGER trigger_log_film_deletion
+AFTER DELETE ON film FOR EACH ROW EXECUTE FUNCTION log_film_deletion();
+```
+
+**Veamos como funciona, probemos eliminando la entrada que hicimos en el ejercicio anterior:**
+
+```postgresql
+DELETE FROM film
+WHERE film_id = 10000;
+DELETE 1
+
+SELECT * FROM film_deletion_log;
+ log_id | film_id |       deletion_date       
+--------+---------+---------------------------
+      1 |   10000 | 2024-11-10 21:43:12.14864
+(1 row)
+```
+
+**10. Comente el significado y la relevancia de las secuencias.**
