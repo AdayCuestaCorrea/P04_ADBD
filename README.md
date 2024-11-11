@@ -59,6 +59,203 @@ alquiler=# \ds
 
 ```
 
+**Tabla Customer**
+![customer]()
+
+La tabla "customer" almacena la información de los clientes en el sistema, incluyendo datos personales, de contacto y de estado. Cada cliente está identificado de manera única por el campo customer_id, que actúa como la clave primaria de la tabla. Además, el campo store_id indica la tienda a la que pertenece el cliente, lo que permite relacionarlo con la sucursal correspondiente.
+
+Los campos first_name y last_name guardan el nombre y apellido del cliente, respectivamente, mientras que el campo email almacena su dirección de correo electrónico, facilitando la comunicación directa con el cliente. Para especificar la ubicación del cliente, se utiliza el campo address_id, que conecta con la dirección asociada en otra tabla.
+
+La tabla también incluye campos para gestionar el estado del cliente en el sistema. El campo activebool, de tipo booleano, indica si el cliente está activo (t para verdadero o f para falso). De manera similar, el campo active, de tipo numérico, también representa el estado activo del cliente con valores de 1 para activo y 0 para inactivo.
+El campo create_date registra la fecha en que se creó el registro del cliente, proporcionando un historial del tiempo que el cliente ha estado en el sistema. Por último, el campo last_update muestra la última vez que se actualizó la información del cliente, lo cual es útil para mantener los datos actualizados.
+
+**Tabla Country**
+![country]()
+
+La tabla "country" almacena información sobre los países asociados a los clientes, empleados y tiendas en el sistema. Cada país está identificado de manera única por el campo country_id, que actúa como la clave primaria de la tabla. Este identificador permite hacer referencia a un país de manera única dentro del sistema.
+El campo country contiene el nombre del país, lo que permite identificar fácilmente de qué país se trata. Este campo está diseñado para almacenar el nombre del país en formato de texto, y es clave para la organización y clasificación de los datos relacionados con los países en el sistema.
+El campo last_update registra la última vez que se actualizó la información del país. Este campo es útil para mantener un historial de cuándo se realizaron cambios en los datos relacionados con los países, lo que ayuda a gestionar las actualizaciones y mantener la integridad de la base de datos.
+
+**Tabla City**
+![city]()
+
+La tabla "city" almacena la información de las ciudades asociadas a las direcciones de los clientes, empleados y tiendas en el sistema. Cada ciudad está identificada de manera única por el campo city_id, que actúa como la clave primaria de la tabla. Este identificador único permite hacer referencia a cada ciudad dentro del sistema de manera precisa.
+
+El campo city almacena el nombre de la ciudad, facilitando su identificación y clasificación. Este campo es fundamental para asociar direcciones a ciudades específicas dentro del sistema.
+
+El campo country_id es una clave foránea que hace referencia al country_id de la tabla "country". Este campo indica el país al que pertenece la ciudad, permitiendo establecer una relación entre las ciudades y los países correspondientes.
+
+El campo last_update registra la fecha y hora en que se realizó la última actualización de los datos relacionados con la ciudad. Este campo es esencial para el mantenimiento de la base de datos, ya que permite llevar un registro de cuándo se modificaron los datos de las ciudades.
+
+**Tabla Address**
+![address]()
+
+La tabla "address" almacena la información detallada de las direcciones asociadas a distintas entidades del sistema, como clientes, empleados y tiendas. Cada dirección está identificada de manera única por el campo address_id, que actúa como la clave primaria de la tabla, permitiendo una referencia única a cada dirección dentro del sistema.
+
+El campo address contiene la dirección principal, como el nombre de la calle y el número, proporcionando la ubicación básica de la dirección. En caso de que se necesite información adicional sobre la dirección, se utiliza el campo address2, que es opcional y puede almacenar detalles como el número de apartamento o unidad.
+
+El campo district registra el distrito o la región administrativa en la que se encuentra cada dirección, lo que ayuda a clasificar la ubicación dentro de un contexto más específico de la ciudad o área geográfica.
+
+Para asociar cada dirección a una ciudad, la tabla incluye el campo city_id, que es una clave foránea que enlaza cada dirección con la tabla CITY. Este campo permite identificar la ciudad a la que pertenece la dirección mediante su identificador único.
+
+El campo postal_code almacena el código postal correspondiente a cada dirección, lo que facilita la identificación precisa de la ubicación geográfica en sistemas de envío o distribución.
+
+El campo phone almacena el número de teléfono asociado a la dirección, lo que puede ser útil para contactar directamente con los clientes o entidades relacionadas con esa dirección.
+
+Finalmente, el campo last_update registra la fecha y hora en que se realizó la última actualización de los datos en la tabla, permitiendo un historial de cambios y asegurando que los registros se mantengan actualizados.
+
+**Tabla Store**
+![store]()
+
+La tabla "store" almacena información básica sobre las tiendas en el sistema, asignando un identificador único a cada tienda a través del campo store_id, que actúa como la clave primaria de la tabla. Este identificador único permite referenciar y gestionar cada tienda de forma individual dentro de la base de datos.
+
+Cada tienda está asociada a un gerente, identificado por el campo manager_staff_id, que almacena el número de empleado del gerente encargado de la tienda. Este campo es clave para establecer quién está a cargo de la gestión y operación de cada tienda en el sistema.
+
+El campo address_id es una clave foránea que enlaza la tabla STORE con la tabla ADDRESS, asociando cada tienda a una dirección específica previamente registrada. Esta relación permite determinar la ubicación física de cada tienda en el sistema.
+
+Además, la tabla incluye el campo last_update, que registra la fecha y hora de la última modificación realizada en los datos de cada tienda. Este campo es importante para mantener un historial de las actualizaciones y garantizar que la información de la tienda esté siempre actualizada.
+
+**Tabla Payment**
+![payment]()
+
+La tabla "payment" representa y almacena la información de los pagos realizados por los clientes en el sistema. Cada pago está identificado de manera única por el campo payment_id, que actúa como la clave primaria de la tabla, permitiendo hacer referencia de forma precisa a cada transacción realizada.
+
+El campo customer_id almacena el identificador del cliente que realizó el pago, siendo este un campo de tipo clave foránea que se refiere al customer_id de la tabla customer, permitiendo asociar cada pago con un cliente específico.
+
+El campo staff_id almacena el identificador del empleado que gestionó o procesó el pago. Este campo es una clave foránea que se relaciona con el staff_id de la tabla staff, permitiendo hacer seguimiento de qué empleado gestionó la transacción.
+
+El campo rental_id es una clave foránea que hace referencia al rental_id de la tabla rental, indicando el alquiler o servicio relacionado con el pago. Este campo establece una relación entre los pagos y los alquileres asociados a los clientes.
+
+El campo amount registra el monto pagado por el cliente. Este campo es de tipo numérico y contiene el valor total de la transacción.
+
+Por último, el campo payment_date almacena la fecha y hora en que se realizó el pago. Este campo es fundamental para registrar el momento exacto de la transacción y facilitar la trazabilidad de los pagos en el sistema.
+
+**Tabla Staff**
+![staff]()
+
+La tabla "staff" almacena la información del personal de las tiendas, incluyendo detalles personales, de contacto y laborales. Cada miembro del personal está identificado de manera única por el campo staff_id, que actúa como la clave primaria de la tabla, permitiendo una referencia única y precisa para cada empleado dentro del sistema.
+
+El campo first_name almacena el nombre del empleado, mientras que last_name guarda su apellido, ambos campos esenciales para identificar al miembro del personal de manera individual.
+
+El campo address_id es una clave foránea que enlaza la tabla STAFF con la tabla ADDRESS, asociando cada empleado con una dirección específica previamente registrada. Este campo permite conocer la ubicación física del empleado.
+
+El campo email almacena la dirección de correo electrónico del empleado, lo que facilita la comunicación con él para cuestiones laborales o administrativas.
+
+El campo store_id es una clave foránea que se refiere al store_id de la tabla STORE, indicando la tienda en la que trabaja cada empleado. Este campo establece la relación entre el personal y la tienda correspondiente.
+
+El campo active es de tipo numérico y se utiliza para indicar si el empleado está activo en el sistema. Un valor de 1 significa que el empleado está activo, mientras que un valor de 0 indica que está inactivo.
+
+El campo username almacena el nombre de usuario del empleado, utilizado para acceder al sistema, mientras que el campo password guarda la contraseña cifrada del empleado, asegurando la protección de las credenciales de acceso.
+
+El campo last_update registra la fecha y hora de la última actualización realizada en los datos del empleado, lo que permite llevar un control sobre los cambios y actualizaciones de la información laboral.
+
+Por último, el campo picture almacena una referencia a la imagen del empleado, permitiendo asociar una foto al perfil del miembro del personal para fines de identificación visual en el sistema.
+
+**Tabla Rental**
+![rental]()
+
+La tabla "rental" representa y almacena información detallada sobre los alquileres de inventario realizados por los clientes. Cada alquiler está identificado de manera única por el campo rental_id, que actúa como la clave primaria de la tabla, permitiendo una referencia precisa a cada transacción de alquiler en el sistema.
+
+El campo rental_date registra la fecha y hora en que se realizó el alquiler, lo que ayuda a identificar el momento exacto en que el cliente obtuvo el artículo en alquiler.
+
+El campo inventory_id es una clave foránea que hace referencia al inventory_id de la tabla INVENTORY, indicando el artículo específico que fue alquilado. Este campo es crucial para rastrear qué artículo de inventario fue entregado al cliente.
+
+Para asociar cada alquiler con un cliente, la tabla incluye el campo customer_id, que es una clave foránea que se refiere al customer_id de la tabla CUSTOMER, permitiendo identificar al cliente que realizó el alquiler.
+
+El campo return_date registra la fecha y hora en que el artículo alquilado fue devuelto. Este campo es importante para rastrear la duración del alquiler y controlar los plazos de devolución de los artículos.
+
+El campo staff_id almacena el identificador del miembro del personal responsable de gestionar el alquiler, siendo una clave foránea que hace referencia al staff_id de la tabla STAFF. Este campo facilita el seguimiento del personal que ha intervenido en cada transacción de alquiler.
+
+Por último, el campo last_update registra la fecha y hora de la última actualización de los datos en la tabla. Este campo es útil para el control de auditoría y el seguimiento de cambios en los registros de alquiler, garantizando que los datos se mantengan actualizados.
+
+**Tabla Inventory**
+![inventory]()
+
+La tabla "inventory" representa y almacena información detallada sobre el inventario de películas disponibles en cada tienda del sistema. Cada artículo de inventario está identificado de manera única por el campo inventory_id, que actúa como la clave primaria de la tabla, permitiendo una referencia precisa y única para cada copia física de una película en el inventario.
+
+El campo film_id es una clave foránea que enlaza cada artículo de inventario con un film_id en la tabla FILM, indicando el título de la película a la que pertenece cada artículo. Este campo es esencial para identificar a qué película corresponde cada unidad del inventario, lo que facilita la gestión y el seguimiento de las películas disponibles.
+
+Para asociar cada artículo de inventario con una tienda específica, la tabla incluye el campo store_id, que es una clave foránea que hace referencia al store_id de la tabla STORE, indicando en qué tienda se encuentra cada copia de película disponible para alquiler.
+
+El campo last_update registra la fecha y hora de la última actualización realizada en los datos del artículo de inventario. Este campo es crucial para el control de auditoría y para rastrear las actualizaciones y cambios en los registros del inventario, garantizando que la información esté siempre actualizada.
+
+**Tabla Actor**
+![actor]()
+
+La tabla "actor" representa y almacena información detallada sobre los actores asociados a las películas en el sistema. Cada actor está identificado de manera única por el campo actor_id, que actúa como la clave primaria de la tabla, permitiendo una referencia precisa y única para cada actor registrado en el sistema.
+
+El campo first_name almacena el primer nombre del actor, mientras que last_name guarda su apellido. Estos campos son esenciales para almacenar el nombre completo del actor y permitir su identificación de manera adecuada en el sistema.
+
+El campo last_update registra la fecha y hora de la última actualización realizada en los datos del actor. Este campo es útil para el control de auditoría y para rastrear cualquier cambio o modificación en la información del actor, asegurando que los registros se mantengan actualizados.
+
+**Tabla Film_actor**
+![film_actor]()
+
+La tabla "film_actor" representa y almacena información detallada sobre la participación de actores en películas dentro del sistema de gestión de datos cinematográficos. Cada fila de esta tabla establece una relación entre un actor y una película en la que el actor ha participado.
+
+El campo actor_id es una clave foránea que se refiere al actor_id de la tabla ACTOR, permitiendo identificar de manera única al actor que ha participado en la película. Este campo vincula al actor con su participación en el sistema.
+
+El campo film_id es una clave foránea que hace referencia al film_id de la tabla FILM, indicando a qué película específica ha sido asignado el actor. Esto permite asociar un actor a una o más películas en las que haya participado.
+
+El campo last_update registra la fecha y hora de la última actualización realizada en los datos de la participación del actor en la película. Este campo es esencial para el control de auditoría y para rastrear cualquier cambio o actualización en los registros relacionados con la participación de los actores, asegurando que los datos se mantengan actualizados.
+
+**Tabla Film**
+![film]()
+
+La tabla "film" representa y almacena información detallada sobre cada película disponible en el sistema de la tienda de alquiler. Cada película está identificada de manera única por el campo film_id, que actúa como la clave primaria de la tabla, permitiendo diferenciar cada título en el inventario de películas.
+
+El campo title almacena el título de la película, proporcionando una manera clara de identificarla dentro del sistema, mientras que el campo description ofrece una breve descripción de la trama o contenido de la película, brindando información adicional sobre la misma.
+
+Para registrar la disponibilidad y el contexto de la película, la tabla incluye varios campos clave:
+
+- **release_year** indica el año en que se lanzó la película, lo que ayuda a organizar y clasificar las películas por fecha de estreno.
+- **language_id** es una clave foránea que se refiere al language_id de la tabla LANGUAGE, identificando el idioma en el que está disponible la película, lo cual es útil en un sistema multilingüe.
+
+Los detalles operativos del alquiler de la película son gestionados a través de los siguientes campos:
+
+- **rental_duration** especifica la duración en días por la cual la película puede ser alquilada.
+- **rental_rate** almacena la tarifa de alquiler de la película, permitiendo calcular el costo de cada alquiler.
+- **length registra** la duración de la película en minutos, lo que permite a los clientes conocer cuánto tiempo dura la película.
+
+El campo replacement_cost es utilizado para calcular el valor de reposición de una copia de la película en caso de pérdida o daño, lo que ayuda a la tienda a gestionar el inventario de manera eficiente.
+
+El campo rating clasifica la película según su audiencia adecuada, permitiendo determinar si la película es apta para ciertos grupos de edad o públicos específicos.
+
+El campo special_features enumera características especiales adicionales de la película, como escenas detrás de cámaras, versiones extendidas o comentarios del director, lo que puede resultar atractivo para los clientes interesados en contenido adicional.
+
+Por último, el campo last_update registra la fecha y hora de la última actualización realizada en los datos de la película, lo cual es útil para el control de auditoría y para rastrear las modificaciones en el inventario de películas.
+
+**Tabla Language**
+![language]()
+
+La tabla "language" representa y almacena información sobre los idiomas disponibles en el sistema de gestión de películas. Cada idioma está identificado de manera única por el campo language_id, que actúa como la clave primaria de la tabla, permitiendo diferenciar cada idioma registrado en el sistema de forma única.
+
+El campo name almacena el nombre del idioma, especificando claramente de qué idioma se trata, como "English", "Italian", "Japanese", entre otros. Este campo es esencial para clasificar las películas y otros registros del sistema según el idioma en el que están disponibles.
+
+Por último, el campo last_update registra la fecha y hora de la última actualización realizada en los datos del idioma. Este campo es crucial para el control de auditoría y para rastrear las modificaciones en los registros de idiomas, asegurando que los datos se mantengan actualizados.
+
+**Tabla Film_category**
+![film_category]()
+
+La tabla "film_category" representa y almacena información sobre la relación entre cada película y su categoría correspondiente en el sistema de la tienda de alquiler. Esta tabla permite clasificar las películas en diferentes géneros o tipos, como acción, comedia, drama, entre otros, facilitando la organización y búsqueda de títulos en el inventario.
+
+El campo film_id es una clave foránea que hace referencia al film_id de la tabla FILM, identificando de manera única cada película en el sistema. Este campo establece la conexión entre la película y su categoría asociada.
+
+El campo category_id es una clave foránea que se refiere al category_id de la tabla CATEGORY, indicando a qué género o tipo de película pertenece cada título. Este campo permite agrupar las películas bajo categorías específicas, como acción, comedia, etc.
+
+Por último, el campo last_update registra la fecha y hora de la última actualización realizada en los registros de la relación entre películas y categorías. Este campo es importante para el control de auditoría y para asegurar que la información relacionada con las categorías de las películas esté siempre actualizada.
+
+**Tabla Category**
+![category]()
+
+La tabla "category" representa y almacena información detallada sobre cada categoría de películas disponible en el sistema de la tienda de alquiler. Esta tabla permite organizar y clasificar las películas en diferentes géneros o tipos, facilitando la búsqueda y gestión de títulos en el inventario.
+
+El campo category_id es el identificador único de cada categoría, actuando como la clave primaria de la tabla. Este campo permite diferenciar y organizar los distintos géneros o tipos de películas, asegurando que cada categoría tenga una referencia única en el sistema.
+
+El campo name almacena el nombre de la categoría, que describe el tipo de contenido de las películas agrupadas bajo esta categoría, como "Action", "Comedy", "Horror", entre otros. Este campo es esencial para clasificar las películas y permite a los usuarios buscar y filtrar títulos según el género o tipo de contenido que desean ver.
+
+El campo last_update registra la fecha y hora de la última actualización realizada en los datos de la categoría. Este campo es útil para el control de auditoría y para rastrear los cambios realizados en los registros de categorías, asegurando que la información esté siempre actualizada.
+
 **Revisando las tablas, observé como la tabla inventory no posee los store_id como clave foránea de store, esto está mal teniendo en cuenta como está hecho el esquema de la base de datos así que decidí arreglarlo**
 
 ```postgresql
