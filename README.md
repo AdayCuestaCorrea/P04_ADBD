@@ -60,6 +60,7 @@ alquiler=# \ds
 ```
 
 **Tabla Customer**
+
 ![customer](https://github.com/AdayCuestaCorrea/P04_ADBD/blob/main/Tablas/customer.png)
 
 La tabla "customer" almacena la información de los clientes en el sistema, incluyendo datos personales, de contacto y de estado. Cada cliente está identificado de manera única por el campo customer_id, que actúa como la clave primaria de la tabla. Además, el campo store_id indica la tienda a la que pertenece el cliente, lo que permite relacionarlo con la sucursal correspondiente.
@@ -70,6 +71,7 @@ La tabla también incluye campos para gestionar el estado del cliente en el sist
 El campo create_date registra la fecha en que se creó el registro del cliente, proporcionando un historial del tiempo que el cliente ha estado en el sistema. Por último, el campo last_update muestra la última vez que se actualizó la información del cliente, lo cual es útil para mantener los datos actualizados.
 
 **Tabla Country**
+
 ![country](https://github.com/AdayCuestaCorrea/P04_ADBD/blob/main/Tablas/country.png)
 
 La tabla "country" almacena información sobre los países asociados a los clientes, empleados y tiendas en el sistema. Cada país está identificado de manera única por el campo country_id, que actúa como la clave primaria de la tabla. Este identificador permite hacer referencia a un país de manera única dentro del sistema.
@@ -77,6 +79,7 @@ El campo country contiene el nombre del país, lo que permite identificar fácil
 El campo last_update registra la última vez que se actualizó la información del país. Este campo es útil para mantener un historial de cuándo se realizaron cambios en los datos relacionados con los países, lo que ayuda a gestionar las actualizaciones y mantener la integridad de la base de datos.
 
 **Tabla City**
+
 ![city](https://github.com/AdayCuestaCorrea/P04_ADBD/blob/main/Tablas/city.png)
 
 La tabla "city" almacena la información de las ciudades asociadas a las direcciones de los clientes, empleados y tiendas en el sistema. Cada ciudad está identificada de manera única por el campo city_id, que actúa como la clave primaria de la tabla. Este identificador único permite hacer referencia a cada ciudad dentro del sistema de manera precisa.
@@ -88,6 +91,7 @@ El campo country_id es una clave foránea que hace referencia al country_id de l
 El campo last_update registra la fecha y hora en que se realizó la última actualización de los datos relacionados con la ciudad. Este campo es esencial para el mantenimiento de la base de datos, ya que permite llevar un registro de cuándo se modificaron los datos de las ciudades.
 
 **Tabla Address**
+
 ![address](https://github.com/AdayCuestaCorrea/P04_ADBD/blob/main/Tablas/address.png)
 
 La tabla "address" almacena la información detallada de las direcciones asociadas a distintas entidades del sistema, como clientes, empleados y tiendas. Cada dirección está identificada de manera única por el campo address_id, que actúa como la clave primaria de la tabla, permitiendo una referencia única a cada dirección dentro del sistema.
@@ -105,6 +109,7 @@ El campo phone almacena el número de teléfono asociado a la dirección, lo que
 Finalmente, el campo last_update registra la fecha y hora en que se realizó la última actualización de los datos en la tabla, permitiendo un historial de cambios y asegurando que los registros se mantengan actualizados.
 
 **Tabla Store**
+
 ![store](https://github.com/AdayCuestaCorrea/P04_ADBD/blob/main/Tablas/store.png)
 
 La tabla "store" almacena información básica sobre las tiendas en el sistema, asignando un identificador único a cada tienda a través del campo store_id, que actúa como la clave primaria de la tabla. Este identificador único permite referenciar y gestionar cada tienda de forma individual dentro de la base de datos.
@@ -116,6 +121,7 @@ El campo address_id es una clave foránea que enlaza la tabla STORE con la tabla
 Además, la tabla incluye el campo last_update, que registra la fecha y hora de la última modificación realizada en los datos de cada tienda. Este campo es importante para mantener un historial de las actualizaciones y garantizar que la información de la tienda esté siempre actualizada.
 
 **Tabla Payment**
+
 ![payment](https://github.com/AdayCuestaCorrea/P04_ADBD/blob/main/Tablas/payment.png)
 
 La tabla "payment" representa y almacena la información de los pagos realizados por los clientes en el sistema. Cada pago está identificado de manera única por el campo payment_id, que actúa como la clave primaria de la tabla, permitiendo hacer referencia de forma precisa a cada transacción realizada.
@@ -131,6 +137,7 @@ El campo amount registra el monto pagado por el cliente. Este campo es de tipo n
 Por último, el campo payment_date almacena la fecha y hora en que se realizó el pago. Este campo es fundamental para registrar el momento exacto de la transacción y facilitar la trazabilidad de los pagos en el sistema.
 
 **Tabla Staff**
+
 ![staff](https://github.com/AdayCuestaCorrea/P04_ADBD/blob/main/Tablas/staff.png)
 
 La tabla "staff" almacena la información del personal de las tiendas, incluyendo detalles personales, de contacto y laborales. Cada miembro del personal está identificado de manera única por el campo staff_id, que actúa como la clave primaria de la tabla, permitiendo una referencia única y precisa para cada empleado dentro del sistema.
@@ -152,6 +159,7 @@ El campo last_update registra la fecha y hora de la última actualización reali
 Por último, el campo picture almacena una referencia a la imagen del empleado, permitiendo asociar una foto al perfil del miembro del personal para fines de identificación visual en el sistema.
 
 **Tabla Rental**
+
 ![rental](https://github.com/AdayCuestaCorrea/P04_ADBD/blob/main/Tablas/rental.png)
 
 La tabla "rental" representa y almacena información detallada sobre los alquileres de inventario realizados por los clientes. Cada alquiler está identificado de manera única por el campo rental_id, que actúa como la clave primaria de la tabla, permitiendo una referencia precisa a cada transacción de alquiler en el sistema.
@@ -169,6 +177,7 @@ El campo staff_id almacena el identificador del miembro del personal responsable
 Por último, el campo last_update registra la fecha y hora de la última actualización de los datos en la tabla. Este campo es útil para el control de auditoría y el seguimiento de cambios en los registros de alquiler, garantizando que los datos se mantengan actualizados.
 
 **Tabla Inventory**
+
 ![inventory](https://github.com/AdayCuestaCorrea/P04_ADBD/blob/main/Tablas/inventory.png)
 
 La tabla "inventory" representa y almacena información detallada sobre el inventario de películas disponibles en cada tienda del sistema. Cada artículo de inventario está identificado de manera única por el campo inventory_id, que actúa como la clave primaria de la tabla, permitiendo una referencia precisa y única para cada copia física de una película en el inventario.
@@ -180,6 +189,7 @@ Para asociar cada artículo de inventario con una tienda específica, la tabla i
 El campo last_update registra la fecha y hora de la última actualización realizada en los datos del artículo de inventario. Este campo es crucial para el control de auditoría y para rastrear las actualizaciones y cambios en los registros del inventario, garantizando que la información esté siempre actualizada.
 
 **Tabla Actor**
+
 ![actor](https://github.com/AdayCuestaCorrea/P04_ADBD/blob/main/Tablas/actor.png)
 
 La tabla "actor" representa y almacena información detallada sobre los actores asociados a las películas en el sistema. Cada actor está identificado de manera única por el campo actor_id, que actúa como la clave primaria de la tabla, permitiendo una referencia precisa y única para cada actor registrado en el sistema.
@@ -189,6 +199,7 @@ El campo first_name almacena el primer nombre del actor, mientras que last_name 
 El campo last_update registra la fecha y hora de la última actualización realizada en los datos del actor. Este campo es útil para el control de auditoría y para rastrear cualquier cambio o modificación en la información del actor, asegurando que los registros se mantengan actualizados.
 
 **Tabla Film_actor**
+
 ![film_actor](https://github.com/AdayCuestaCorrea/P04_ADBD/blob/main/Tablas/film_actor.png)
 
 La tabla "film_actor" representa y almacena información detallada sobre la participación de actores en películas dentro del sistema de gestión de datos cinematográficos. Cada fila de esta tabla establece una relación entre un actor y una película en la que el actor ha participado.
@@ -200,6 +211,7 @@ El campo film_id es una clave foránea que hace referencia al film_id de la tabl
 El campo last_update registra la fecha y hora de la última actualización realizada en los datos de la participación del actor en la película. Este campo es esencial para el control de auditoría y para rastrear cualquier cambio o actualización en los registros relacionados con la participación de los actores, asegurando que los datos se mantengan actualizados.
 
 **Tabla Film**
+
 ![film](https://github.com/AdayCuestaCorrea/P04_ADBD/blob/main/Tablas/film.png)
 
 La tabla "film" representa y almacena información detallada sobre cada película disponible en el sistema de la tienda de alquiler. Cada película está identificada de manera única por el campo film_id, que actúa como la clave primaria de la tabla, permitiendo diferenciar cada título en el inventario de películas.
@@ -226,6 +238,7 @@ El campo special_features enumera características especiales adicionales de la 
 Por último, el campo last_update registra la fecha y hora de la última actualización realizada en los datos de la película, lo cual es útil para el control de auditoría y para rastrear las modificaciones en el inventario de películas.
 
 **Tabla Language**
+
 ![language](https://github.com/AdayCuestaCorrea/P04_ADBD/blob/main/Tablas/language.png)
 
 La tabla "language" representa y almacena información sobre los idiomas disponibles en el sistema de gestión de películas. Cada idioma está identificado de manera única por el campo language_id, que actúa como la clave primaria de la tabla, permitiendo diferenciar cada idioma registrado en el sistema de forma única.
@@ -235,6 +248,7 @@ El campo name almacena el nombre del idioma, especificando claramente de qué id
 Por último, el campo last_update registra la fecha y hora de la última actualización realizada en los datos del idioma. Este campo es crucial para el control de auditoría y para rastrear las modificaciones en los registros de idiomas, asegurando que los datos se mantengan actualizados.
 
 **Tabla Film_category**
+
 ![film_category](https://github.com/AdayCuestaCorrea/P04_ADBD/blob/main/Tablas/film_category.png)
 
 La tabla "film_category" representa y almacena información sobre la relación entre cada película y su categoría correspondiente en el sistema de la tienda de alquiler. Esta tabla permite clasificar las películas en diferentes géneros o tipos, como acción, comedia, drama, entre otros, facilitando la organización y búsqueda de títulos en el inventario.
@@ -246,6 +260,7 @@ El campo category_id es una clave foránea que se refiere al category_id de la t
 Por último, el campo last_update registra la fecha y hora de la última actualización realizada en los registros de la relación entre películas y categorías. Este campo es importante para el control de auditoría y para asegurar que la información relacionada con las categorías de las películas esté siempre actualizada.
 
 **Tabla Category**
+
 ![category](https://github.com/AdayCuestaCorrea/P04_ADBD/blob/main/Tablas/category.png)
 
 La tabla "category" representa y almacena información detallada sobre cada categoría de películas disponible en el sistema de la tienda de alquiler. Esta tabla permite organizar y clasificar las películas en diferentes géneros o tipos, facilitando la búsqueda y gestión de títulos en el inventario.
