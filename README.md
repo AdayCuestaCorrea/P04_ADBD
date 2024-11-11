@@ -336,6 +336,8 @@ ALTER TABLE customer
 ADD CONSTRAINT fk_store_id FOREIGN KEY (store_id) REFERENCES store(store_id) ON UPDATE CASCADE ON DELETE RESTRICT;
 ```
 
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 **3. Identifique las tablas principales y sus principales elementos.**
 
 Las tablas principales son las siguientes:
@@ -777,3 +779,4 @@ SELECT * FROM film_deletion_log;
 ```
 
 **10. Comente el significado y la relevancia de las secuencias.**
+Una secuencia es un mecanismo especial en bases de datos que permite generar números únicos y consecutivos. Su propósito principal es asignar valores a las claves primarias de las tablas, garantizando que cada nuevo registro cuente con un identificador exclusivo. Esto evita duplicaciones y facilita la creación de relaciones entre tablas de manera ordenada. Las secuencias operan como contadores independientes, es decir, conservan su propio estado sin depender de ninguna tabla en particular. Se configuran para generar números consecutivos y sin repetirse, aunque también es posible ajustarlas para que los valores aumenten o disminuyan en intervalos específicos cuando sea necesario. En PostgreSQL, las secuencias suelen establecerse como valores automáticos para las columnas de clave primaria utilizando la función nextval('nombre_secuencia'), que proporciona el siguiente número disponible en la secuencia. Su importancia radica en varios aspectos: primero, en la integridad de los datos, ya que las secuencias permiten mantener identificadores únicos, previniendo la duplicación en campos que deben actuar como identificadores exclusivos; segundo, en la escalabilidad, ya que al ser objetos independientes, las secuencias permiten insertar datos en tablas grandes sin necesidad de bloquearlas para calcular la siguiente clave única, lo que optimiza el rendimiento en sistemas de alta concurrencia; tercero, en la facilidad de gestión, pues el uso de secuencias para las claves primarias automatiza la generación de identificadores y disminuye el riesgo de errores en la asignación manual de claves; y finalmente, en la adaptabilidad, ya que las secuencias son altamente configurables, permitiendo definir el valor inicial, el tamaño del incremento e incluso si deben reiniciar el ciclo, lo cual facilita su ajuste a diversas necesidades.
