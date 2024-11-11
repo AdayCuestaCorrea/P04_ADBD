@@ -271,6 +271,8 @@ El campo name almacena el nombre de la categoría, que describe el tipo de conte
 
 El campo last_update registra la fecha y hora de la última actualización realizada en los datos de la categoría. Este campo es útil para el control de auditoría y para rastrear los cambios realizados en los registros de categorías, asegurando que la información esté siempre actualizada.
 
+## Error en las tablas
+
 **Revisando las tablas, observé como la tabla inventory no posee los store_id como clave foránea de store, esto está mal teniendo en cuenta como está hecho el esquema de la base de datos así que decidí arreglarlo**
 
 ```postgresql
